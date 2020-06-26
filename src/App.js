@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Forecast from './components/Forecast'
+import CurrentWeather from './components/CurrentWeather'
 import './styles/app.css'
 
 const App = () => {
@@ -16,18 +17,24 @@ const App = () => {
     description: undefined,
   })
 
+  const [coords, setCoords] = useState({})
+
   useEffect(() => {
     if (navigator.geolocation){
       getPosition()
           .then((position) => {
               getWeather(position.coords.latitude, position.coords.longitude)
+              setCoords({
+                lat: position.coords.latitude,
+                lon: position.coords.longitude
+              })
           })
           .catch((err) => {
               getWeather(40.71,-74.01)
           })
     } else {
         alert('Geolocation not available')
-    }    
+    }
   }, [])
 
   const getPosition = (options) => {
@@ -40,9 +47,7 @@ const App = () => {
     const apicall = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&APPID=${API_KEY}`
     )
-
     const data = await apicall.json()
-
     setWeatherInfo({
       lat: lat,
       lon: lon,
@@ -54,7 +59,10 @@ const App = () => {
     }) 
   }
 
-  const {lat, lon, tempC, tempF, city, country, description } = weatherInfo
+  const { lat, lon, tempC, tempF, city, country, description } = weatherInfo
+  
+
+  console.log(coords)
 
 
   let weatherData = weatherInfo ? (
@@ -63,9 +71,15 @@ const App = () => {
         <div className='pt-4 min-h-screen text-red-900'>
           <div className='flex flex-col'>
             <div className='border border-red-500 relative p-12 text-center'>
-                <p className='text-center text-md uppercase absolute top-0 left-0 right-0 ml-auto mr-auto pt-2'>{city}, {country}</p>
-                <p className='text-2xl font-bold'>{tempF}°</p>
-                <p>{description}</p>
+              <CurrentWeather 
+                lat={lat}
+                lon={lon}
+                tempC={tempC}
+                tempF={tempF}
+                city={city}
+                country={country}
+                description={description}
+              />
             </div>
             <div className='border border-red-500 bg-white p-12'>
               <Forecast 
