@@ -18,18 +18,25 @@ const Forecast = ({ lat, lon }) => {
     },[apicall])
 
     return (
-        <div>
+        <div className=''>
             { 
                 dailyWeather ? dailyWeather.map(weather => {
-                    console.log(weather)
+                    const icons = weather.weather[0].icon
+                    const iconLink = `http://openweathermap.org/img/wn/${icons}@2x.png`
+                    const convertF = Math.round(weather.temp.day * (9/5) - 459.67)
                     let convert = weather.dt 
                     const mili = convert * 1000
                     const dateObject = new Date(mili)
                     const days = dateObject.toLocaleDateString('en-US', {weekday: 'long'})
-                    console.log(days)
-                    return (
-                        <div key={Math.random()}> {days} </div>
-                    )
+                        return (
+                            <>
+                                <div className='flex flex-row justify-end text-gray-600 text-sm'>
+                                    <div className='pt-2 pr-5' key={Math.random()}> {days} </div>
+                                    <div className='pt-2 ml-8 font-bold' key={Math.random()}> {convertF}°</div>
+                                    <img className='h-10 w-10 ml-2 mb-2' src={iconLink} alt='weathericons'/>
+                                </div>
+                            </>
+                        )
                 }) : "Loading..."
             }
         </div>

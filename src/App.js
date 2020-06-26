@@ -44,29 +44,30 @@ const App = () => {
     const data = await apicall.json()
 
     setWeatherInfo({
-      lat: lat.toPrecision(3),
-      lon: lon.toPrecision(3),
+      lat: lat,
+      lon: lon,
       tempC: Math.round(data.main.temp),
-      tempF: Math.round(data.main.temp * 1.8 + 32),
+      tempF: Math.floor(data.main.temp * 1.8 + 32),
       city: data.name,
       country: data.sys.country,
       description: data.weather[0].main
     }) 
   }
 
-  const {lat, lon, tempC,tempF, city, country, description } = weatherInfo
+  const {lat, lon, tempC, tempF, city, country, description } = weatherInfo
+
 
   let weatherData = weatherInfo ? (
     <>
-      <div>
-        <div className='flex flex-wrap justify-center items-center text-center min-h-screen text-red-900'>
+      <div className='flex flex-wrap justify-center items-center text-center '>
+        <div className='pt-4 min-h-screen text-red-900'>
           <div className='flex flex-col'>
-            <div className='border border-red-500 relative p-24 text-center'>
-                <p className='text-center m-auto text-md uppercase absolute top-0 p-6'>{city}, {country}</p>
-                <p className='pb-4 text-2xl font-bold'>{tempC}°<span className='pl-1'>C</span></p>
+            <div className='border border-red-500 relative p-12 text-center'>
+                <p className='text-center text-md uppercase absolute top-0 left-0 right-0 ml-auto mr-auto pt-2'>{city}, {country}</p>
+                <p className='text-2xl font-bold'>{tempF}°</p>
                 <p>{description}</p>
             </div>
-            <div className='border border-red-500 bg-white p-24'>
+            <div className='border border-red-500 bg-white p-12'>
               <Forecast 
                 lat={lat}
                 lon={lon}
